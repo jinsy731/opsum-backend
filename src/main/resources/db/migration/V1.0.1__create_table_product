@@ -1,0 +1,9 @@
+create table product
+(
+    product_id bigint auto_increment
+        primary key,
+    name       varchar(255) null,
+    owner      varchar(255) null,
+    point_rate float        null,
+    price      int          not null
+);
