@@ -1,4 +1,4 @@
-package com.opusm.backend.common;
+package com.opusm.backend.common.support;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

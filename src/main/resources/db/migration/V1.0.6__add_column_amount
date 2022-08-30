@@ -1,0 +1,2 @@
+alter table cart_product add column amount integer not null;
+alter table order_product add column amount integer not null;
