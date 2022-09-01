@@ -15,4 +15,9 @@ public class DomainCustomerService implements CustomerService{
     public Customer create(Customer customer) {
         return customerRepository.save(customer);
     }
+
+    @Override
+    public Customer findById(Long customerId) {
+        return customerRepository.findById(customerId).orElseThrow();
+    }
 }

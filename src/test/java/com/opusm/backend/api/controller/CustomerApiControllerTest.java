@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CustomerApiControllerTest extends BaseApiTest {
 
     @Test
-    void 고객_생성() throws Exception {
+    void 고객_생성_성공() throws Exception {
 
         CustomerCreateRequest req = new CustomerCreateRequest("customer1", 1000, 23300);
 

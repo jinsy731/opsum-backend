@@ -1,18 +1,21 @@
 package com.opusm.backend.order.dto;
 
+import com.opusm.backend.order.OrderProduct;
 import com.opusm.backend.product.Product;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class OrderProductCreateDto {
 
-    private int amount;
-    private Product product;
+    @Getter
+    @AllArgsConstructor
+    public static class OrderProductCreateRequest {
+        private int amount;
+        private Product product;
 
-    public OrderProductCreateDto(int amount, Product product) {
-        this.amount = amount;
-        this.product = product;
+        public OrderProduct toEntity() {
+            return new OrderProduct(amount, product);
+        }
     }
 }

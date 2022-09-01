@@ -28,9 +28,8 @@ public class OrderProduct {
     private Product product;
 
     @Builder
-    public OrderProduct(int amount, Order order, Product product) {
+    public OrderProduct(int amount, Product product) {
         this.amount = amount;
-        this.order = order;
         this.product = product;
     }
 }

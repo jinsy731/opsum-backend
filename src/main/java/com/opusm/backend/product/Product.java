@@ -3,6 +3,7 @@ package com.opusm.backend.product;
 import com.opusm.backend.cart.CartProduct;
 import com.opusm.backend.common.exception.Preconditions;
 import com.opusm.backend.common.support.BaseTimeEntity;
+import com.opusm.backend.order.Order;
 import com.opusm.backend.order.OrderProduct;
 import lombok.*;
 import org.apache.logging.log4j.util.Strings;
@@ -29,18 +30,20 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     private int price;
     @Column(nullable = false)
+    private int stock;
+    @Column(nullable = false)
     private float pointRate;
     @Column(nullable = false)
     private String owner;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderProduct> orderProducts = new LinkedHashSet<>();
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartProduct> cartProducts = new LinkedHashSet<>();
+    private List<CartProduct> cartProducts = new ArrayList<>();
 
     @Builder
-    public Product(String name, int price, float pointRate, String owner) {
+    public Product(String name, int price, float pointRate, int stock, String owner) {
         require(Strings.isNotBlank(name));
         require(Strings.isNotBlank(owner));
 
@@ -48,5 +51,9 @@ public class Product extends BaseTimeEntity {
         this.price = price;
         this.pointRate = pointRate;
         this.owner = owner;
+        this.stock = stock;
+    }
+    public void deductStock(int amount) {
+        this.stock -= amount;
     }
 }

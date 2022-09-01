@@ -15,7 +15,7 @@ class ProductTest {
 
     @Test
     void 상품_생성_테스트() {
-        Product product = new Product("product1", 2000, 0.5f, "owner1");
+        Product product = new Product("product1", 2000, 0.5f, 5, "owner1");
 
         assertThat(product.getName()).isEqualTo("product1");
         assertThat(product.getPrice()).isEqualTo(2000);
@@ -26,12 +26,12 @@ class ProductTest {
     @ParameterizedTest
     @NullAndEmptySource
     void 상품_생성_실패_이름이_null이거나_빈값(String name) {
-        assertThatIllegalArgumentException().isThrownBy(() -> new Product(name, 2000, 0.5f, "owner"));
+        assertThatIllegalArgumentException().isThrownBy(() -> new Product(name, 2000, 0.5f, 5, "owner"));
     }
 
     @ParameterizedTest
     @NullAndEmptySource
     void 상품_생성_실패_소유자_이름이_null이거나_빈값(String owner) {
-        assertThatIllegalArgumentException().isThrownBy(() -> new Product("product1", 1, 0.1f, owner));
+        assertThatIllegalArgumentException().isThrownBy(() -> new Product("product1", 1, 0.1f,5, owner));
     }
 }

@@ -24,8 +24,6 @@ public class CustomerCreateDto {
 
     @Getter
     @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class CustomerCreateResponse {
         private Long id;
         private String name;

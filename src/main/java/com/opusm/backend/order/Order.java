@@ -1,11 +1,16 @@
 package com.opusm.backend.order;
 
 import com.opusm.backend.customer.Customer;
+import com.opusm.backend.order.dto.OrderCreateDto;
+import com.opusm.backend.order.dto.OrderCreateDto.OrderCreateRequest;
 import com.opusm.backend.order.dto.OrderProductCreateDto;
+import com.opusm.backend.order.dto.OrderProductCreateDto.OrderProductCreateRequest;
+import com.opusm.backend.product.Product;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import javax.persistence.*;
 import java.util.*;
@@ -22,17 +27,30 @@ public class Order {
     private Long id;
     private int totalPrice;
 
+    @Enumerated(EnumType.STRING)
+    private PayMethod paymentMethod;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @OneToMany(mappedBy = "order" ,cascade = CascadeType.ALL)
-    private Set<OrderProduct> orderProducts = new LinkedHashSet<>();
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
-    @Builder
-    public Order(Customer customer, List<OrderProductCreateDto> orderProductCreateDtos) {
+    public Order(Customer customer, OrderProduct orderProduct, PayMethod paymentMethod) {
         this.customer = customer;
-        this.orderProducts = orderProductCreateDtos.stream().map(dto -> new OrderProduct(dto.getAmount(), this, dto.getProduct())).collect(Collectors.toSet());
-        this.totalPrice = orderProducts.stream().mapToInt(orderProduct -> orderProduct.getAmount() * orderProduct.getProduct().getPrice()).sum();
+        this.orderProducts.add(orderProduct);
+        this.paymentMethod = paymentMethod;
+        this.totalPrice = calculateTotalPrice(this.orderProducts);
+    }
+    public Order(Customer customer, List<OrderProduct> orderProducts, PayMethod paymentMethod) {
+        this.customer = customer;
+        this.orderProducts = orderProducts;
+        this.paymentMethod = paymentMethod;
+        this.totalPrice = calculateTotalPrice(this.orderProducts);
+    }
+
+    private int calculateTotalPrice(List<OrderProduct> orderProducts) {
+        return orderProducts.stream().mapToInt(it -> it.getAmount() * it.getProduct().getPrice()).sum();
     }
 }

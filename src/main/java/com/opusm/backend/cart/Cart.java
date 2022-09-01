@@ -1,17 +1,12 @@
 package com.opusm.backend.cart;
 
-import com.opusm.backend.cart.dto.CartProductCreateDto;
-import com.opusm.backend.common.exception.Preconditions;
 import com.opusm.backend.product.Product;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 import static com.opusm.backend.common.exception.Preconditions.*;
 
@@ -27,21 +22,40 @@ public class Cart {
     private int totalPrice;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartProduct> cartProducts = new LinkedHashSet<>();
+    private List<CartProduct> cartProducts = new ArrayList<>();
 
     public Cart(int amount, Product product) {
         require(amount >= 1);
         notNull(product);
         
-        this.cartProducts = new LinkedHashSet<>(Arrays.asList(new CartProduct(amount, product, this)));
+        this.cartProducts = new ArrayList<>(Arrays.asList(new CartProduct(amount, product, this)));
         this.totalPrice = amount * product.getPrice();
     }
     
-    public void addProductToCart(int amount, Product product) {
+    public void addProduct(int amount, Product product) {
         require(amount >= 1);
         notNull(product);
 
         this.cartProducts.add(new CartProduct(amount, product, this));
         this.totalPrice += (amount * product.getPrice());
+    }
+
+    public void deleteProduct(String productName) {
+        CartProduct findCartProduct = findCartProduct(productName);
+
+        this.totalPrice -= findCartProduct.getAmount() * findCartProduct.getProduct().getPrice();
+        this.cartProducts.remove(findCartProduct);
+    }
+
+    private CartProduct findCartProduct(String productName) {
+        return this.cartProducts.stream().filter(cartProduct -> cartProduct.getProduct().getName()
+                        .equals(productName))
+                .findAny()
+                .orElseThrow();
+    }
+
+    public void clearCart() {
+        this.cartProducts = new ArrayList<>();
+        this.totalPrice = 0;
     }
 }
