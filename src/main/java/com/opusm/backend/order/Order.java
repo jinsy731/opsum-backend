@@ -39,14 +39,14 @@ public class Order {
 
     public Order(Customer customer, OrderProduct orderProduct, PayMethod paymentMethod) {
         this.customer = customer;
-        this.orderProducts.add(orderProduct);
+        this.orderProducts = List.of(orderProduct);
         this.paymentMethod = paymentMethod;
         this.totalPrice = calculateTotalPrice(this.orderProducts);
     }
     public Order(Customer customer, List<OrderProduct> orderProducts, PayMethod paymentMethod) {
         this.customer = customer;
-        orderProducts.stream().forEach(orderProduct -> this.orderProducts.add(orderProduct));
         this.paymentMethod = paymentMethod;
+        this.orderProducts = orderProducts;
         this.totalPrice = calculateTotalPrice(this.orderProducts);
     }
 

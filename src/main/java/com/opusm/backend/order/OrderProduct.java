@@ -1,10 +1,7 @@
 package com.opusm.backend.order;
 
 import com.opusm.backend.product.Product;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
@@ -32,4 +29,5 @@ public class OrderProduct {
         this.amount = amount;
         this.product = product;
     }
+
 }
