@@ -1,8 +1,8 @@
 package com.opusm.backend.order;
 
+import com.opusm.backend.base.BaseServiceTest;
 import com.opusm.backend.cart.Cart;
 import com.opusm.backend.common.exception.OpusmException;
-import com.opusm.backend.common.support.test.BaseServiceTest;
 import com.opusm.backend.customer.Customer;
 import com.opusm.backend.customer.CustomerService;
 import com.opusm.backend.order.dto.OrderCreateDto;
@@ -53,24 +53,24 @@ class DomainOrderServiceTest extends BaseServiceTest {
     void 단일_주문_성공_포인트_사용() {
         Customer customer = new Customer("name1", 10000, 10000);
         Product product = new Product("product1", 1000, 0.5f, 10, "owner1");
-        OrderCreateRequest orderCreateRequest = new OrderCreateRequest(1L, 10L, PayMethod.POINT, 2);
+        OrderCreateRequest orderCreateRequest = new OrderCreateRequest(1L, 10L, PayMethod.POINT, 10);
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);
         Mockito.when(productService.findById(any())).thenReturn(product);
 
         Order order = orderService.singleOrder(orderCreateRequest);
 
-        assertThat(order.getTotalPrice()).isEqualTo(2000);
-        assertThat(customer.getPoints()).isEqualTo(8000);
+        assertThat(order.getTotalPrice()).isEqualTo(10000);
+        assertThat(customer.getPoints()).isEqualTo(0);
         assertThat(customer.getAssets()).isEqualTo(10000);
-        assertThat(product.getStock()).isEqualTo(8);
+        assertThat(product.getStock()).isEqualTo(0);
     }
 
     @Test
     void 단일_주문_실패_상품_재고_부족() {
         Customer customer = new Customer("name1", 10000, 10000);
-        Product product = new Product("product1", 1000, 0.5f, 0, "owner1");
-        OrderCreateRequest orderCreateRequest = new OrderCreateRequest(1L, 10L, PayMethod.ASSET, 2);
+        Product product = new Product("product1", 1000, 0.5f, 1, "owner1");
+        OrderCreateRequest orderCreateRequest = new OrderCreateRequest(1L, 10L, PayMethod.ASSET, 3);
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);
         Mockito.when(productService.findById(any())).thenReturn(product);
@@ -114,11 +114,12 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product2 = new Product("product2", 500, 0.5f, 10, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 10, "owner1");
 
-        Cart cart = new Cart(5, product1);
+        Customer customer = new Customer("name1", 0, 100000);
+        Cart cart = customer.getCart();
+        cart.addProduct(5, product1);
         cart.addProduct(5, product2);
         cart.addProduct(5, product3);
 
-        Customer customer = new Customer("name1", 0, 100000, cart);
         OrderCreateRequest orderCreateRequest = new OrderCreateRequest(1L, null, PayMethod.ASSET, 0);
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);
@@ -141,11 +142,12 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product2 = new Product("product2", 500, 0.5f, 10, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 10, "owner1");
 
-        Cart cart = new Cart(5, product1);
+        Customer customer = new Customer("name1", 100000, 0);
+        Cart cart = customer.getCart();
+        cart.addProduct(5, product1);
         cart.addProduct(5, product2);
         cart.addProduct(5, product3);
 
-        Customer customer = new Customer("name1", 100000, 0, cart);
         OrderCreateRequest orderCreateRequest = new OrderCreateRequest(1L, null, PayMethod.POINT, 0);
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);
@@ -168,11 +170,12 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product2 = new Product("product2", 500, 0.5f, 4, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 4, "owner1");
 
-        Cart cart = new Cart(5, product1);
+        Customer customer = new Customer("name1", 100000, 0);
+        Cart cart = customer.getCart();
+        cart.addProduct(5, product1);
         cart.addProduct(5, product2);
         cart.addProduct(5, product3);
 
-        Customer customer = new Customer("name1", 100000, 0, cart);
         OrderCreateRequest orderCreateRequest = new OrderCreateRequest(1L, null, PayMethod.POINT, 0);
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);
@@ -189,11 +192,12 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product2 = new Product("product2", 500, 0.5f, 10, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 10, "owner1");
 
-        Cart cart = new Cart(5, product1);
+        Customer customer = new Customer("name1", points, 0);
+        Cart cart = customer.getCart();
+        cart.addProduct(5, product1);
         cart.addProduct(5, product2);
         cart.addProduct(5, product3);
 
-        Customer customer = new Customer("name1", points, 0, cart);
         OrderCreateRequest orderCreateRequest = new OrderCreateRequest(1L, null, PayMethod.POINT, 0);
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);
@@ -210,11 +214,12 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product2 = new Product("product2", 500, 0.5f, 10, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 10, "owner1");
 
-        Cart cart = new Cart(5, product1);
+        Customer customer = new Customer("name1", 100000, assets);
+        Cart cart = customer.getCart();
+        cart.addProduct(5, product1);
         cart.addProduct(5, product2);
         cart.addProduct(5, product3);
 
-        Customer customer = new Customer("name1", 100000, assets, cart);
         OrderCreateRequest orderCreateRequest = new OrderCreateRequest(1L, null, PayMethod.ASSET, 0);
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);

@@ -11,13 +11,12 @@ import static com.opusm.backend.cart.dto.CartUpdateDto.*;
 
 public interface CartService {
 
-    @Transactional
-    Cart create(CartCreateRequest req);
-
     Cart findById(Long cartId);
 
+    @Transactional
     Cart addProduct(CartUpdateRequest req);
 
+    @Transactional
     Cart deleteProduct(CartDeleteRequest req);
 
 }

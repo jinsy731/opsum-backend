@@ -18,13 +18,15 @@ public class CartUpdateDto {
     public static class CartUpdateRequest {
         private int amount;
         private Long productId;
-        private Long cartId;
+        private Long customerId;
     }
 
     @Getter
     @Setter
     @NoArgsConstructor
     public static class CartUpdateResponse {
+
+        private Long id;
         private int totalPrice;
         private List<CartProductVO> cartProducts = new ArrayList<>();
 

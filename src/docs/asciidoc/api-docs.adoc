@@ -1,0 +1,193 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[customer]]
+== Customer
+
+[[customer-post-create]]
+=== Customer 생성
+
+==== HTTP request
+
+include::{snippets}/customer/create/http-request.adoc[]
+include::{snippets}/customer/create/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/create/http-response.adoc[]
+include::{snippets}/customer/create/response-fields.adoc[]
+
+[[customer-get-getOne]]
+=== Customer 단건 조회
+
+==== HTTP request
+
+include::{snippets}/customer/getOne/http-request.adoc[]
+include::{snippets}/customer/getOne/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/getOne/http-response.adoc[]
+include::{snippets}/customer/getOne/response-fields.adoc[]
+
+[[customer-get-getList]]
+=== Customer 리스트 페이징 조회
+
+==== HTTP request
+
+include::{snippets}/customer/getList/http-request.adoc[]
+include::{snippets}/customer/getList/request-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/getList/http-response.adoc[]
+include::{snippets}/customer/getList/response-fields.adoc[]
+
+
+[[customer-get-getCart]]
+=== Customer 장바구니 조회
+
+==== HTTP request
+
+include::{snippets}/customer/findCart/http-request.adoc[]
+include::{snippets}/customer/findCart/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/findCart/http-response.adoc[]
+include::{snippets}/customer/findCart/response-fields.adoc[]
+
+[[customer-get-getOrderList]]
+=== Customer 주문 조회
+
+==== HTTP request
+
+include::{snippets}/customer/getOrderList/http-request.adoc[]
+include::{snippets}/customer/getOrderList/path-parameters.adoc[]
+include::{snippets}/customer/getOrderList/request-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/customer/getOrderList/http-response.adoc[]
+include::{snippets}/customer/getOrderList/response-fields.adoc[]
+
+[[product]]
+== Product
+
+[[product-post-create]]
+=== Product 생성
+
+==== HTTP request
+
+include::{snippets}/product/create/http-request.adoc[]
+include::{snippets}/product/create/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product/create/http-response.adoc[]
+include::{snippets}/product/create/response-fields.adoc[]
+
+[[product-post-update]]
+=== Product 업데이트
+
+==== HTTP request
+
+include::{snippets}/product/update/http-request.adoc[]
+include::{snippets}/product/update/request-fields.adoc[]
+include::{snippets}/product/update/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product/update/http-response.adoc[]
+include::{snippets}/product/update/response-fields.adoc[]
+
+
+[[product-get-getOne]]
+=== Product 단건 조회
+
+==== HTTP request
+
+include::{snippets}/product/getOne/http-request.adoc[]
+include::{snippets}/product/getOne/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product/getOne/http-response.adoc[]
+include::{snippets}/product/getOne/response-fields.adoc[]
+
+[[product-get-getList]]
+=== Product 리스트 조회 페이징
+
+==== HTTP request
+
+include::{snippets}/product/getList/http-request.adoc[]
+include::{snippets}/product/getList/request-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/product/getList/http-response.adoc[]
+include::{snippets}/product/getList/response-fields.adoc[]
+
+
+[[cart]]
+== Cart
+
+[[cart-post-addProduct]]
+=== Cart 상품 추가
+
+==== HTTP request
+
+include::{snippets}/cart/addProduct/http-request.adoc[]
+include::{snippets}/cart/addProduct/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/cart/addProduct/http-response.adoc[]
+include::{snippets}/cart/addProduct/response-fields.adoc[]
+
+
+[[cart-post-deleteProduct]]
+=== Cart 상품 삭제
+
+==== HTTP request
+
+include::{snippets}/cart/deleteProduct/http-request.adoc[]
+include::{snippets}/cart/deleteProduct/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/cart/deleteProduct/http-response.adoc[]
+include::{snippets}/cart/deleteProduct/response-fields.adoc[]
+
+
+[[order]]
+== Order
+
+[[order-singleOrder]]
+=== 단일 상품 주문
+
+==== HTTP request
+
+include::{snippets}/order/singleOrder/http-request.adoc[]
+include::{snippets}/order/singleOrder/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/order/singleOrder/http-response.adoc[]
+include::{snippets}/order/singleOrder/response-fields.adoc[]
+
+
+[[order-cartOrder]]
+=== 장바구니 상품 주문
+
+==== HTTP request
+
+include::{snippets}/order/cartOrder/http-request.adoc[]
+include::{snippets}/order/cartOrder/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/order/cartOrder/http-response.adoc[]
+include::{snippets}/order/cartOrder/response-fields.adoc[]

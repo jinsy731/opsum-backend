@@ -1,4 +1,4 @@
-package com.opusm.backend.common.support.test;
+package com.opusm.backend.base;
 
 
 import com.opusm.backend.common.exception.ErrorCode;

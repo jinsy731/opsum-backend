@@ -36,9 +36,7 @@ public class CartCreateDto {
 
         public CartCreateResponse(Cart cart) {
             ModelMappers.modelMapper.map(cart, this);
-            this.totalPrice = this.getCartProducts().stream().mapToInt(value -> {
-                return value.getProduct().getPrice() * value.getAmount();
-            }).sum();
+            this.totalPrice = this.getCartProducts().stream().mapToInt(value -> value.getProduct().getPrice() * value.getAmount()).sum();
         }
     }
 }

@@ -13,7 +13,7 @@ public class ConversionUtils {
         return ModelMappers.modelMapper.map(entity, dtoType);
     }
 
-    public static <T> void entityUpdate(Object src, Object target) {
+    public static void entityUpdate(Object src, Object target) {
         copyPropertiesIgnoreNull(src, target);
     }
 

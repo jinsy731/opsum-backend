@@ -24,6 +24,16 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartProduct> cartProducts = new ArrayList<>();
 
+    /**
+     * 최조 Customer 생성 시
+     * @param totalPrice
+     * @param cartProducts
+     */
+    public Cart(int totalPrice, List<CartProduct> cartProducts) {
+        this.totalPrice = totalPrice;
+        this.cartProducts = cartProducts;
+    }
+
     public Cart(int amount, Product product) {
         require(amount >= 1);
         notNull(product);
@@ -40,16 +50,16 @@ public class Cart {
         this.totalPrice += (amount * product.getPrice());
     }
 
-    public void deleteProduct(String productName) {
-        CartProduct findCartProduct = findCartProduct(productName);
+    public void deleteProduct(Long productId) {
+        CartProduct findCartProduct = findCartProduct(productId);
 
         this.totalPrice -= findCartProduct.getAmount() * findCartProduct.getProduct().getPrice();
         this.cartProducts.remove(findCartProduct);
     }
 
-    private CartProduct findCartProduct(String productName) {
-        return this.cartProducts.stream().filter(cartProduct -> cartProduct.getProduct().getName()
-                        .equals(productName))
+    private CartProduct findCartProduct(Long productId) {
+        return this.cartProducts.stream().filter(cartProduct -> cartProduct.getProduct().getId()
+                        .equals(productId))
                 .findAny()
                 .orElseThrow();
     }

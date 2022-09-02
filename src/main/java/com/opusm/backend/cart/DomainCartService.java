@@ -1,9 +1,13 @@
 package com.opusm.backend.cart;
 
 import com.opusm.backend.cart.dto.CartDeleteDto;
+import com.opusm.backend.customer.Customer;
+import com.opusm.backend.customer.CustomerRepository;
+import com.opusm.backend.customer.CustomerService;
 import com.opusm.backend.product.Product;
 import com.opusm.backend.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,18 +18,12 @@ import static com.opusm.backend.cart.dto.CartUpdateDto.*;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class DomainCartService implements CartService{
 
     private final CartRepository cartRepository;
     private final ProductService productService;
-
-    @Override
-    public Cart create(CartCreateRequest req) {
-        Product product = productService.findById(req.getProductId());
-        Cart cart = req.toEntity(product);
-
-        return cartRepository.save(cart);
-    }
+    private final CustomerService customerService;
 
     @Override
     public Cart findById(Long cartId) {
@@ -35,7 +33,8 @@ public class DomainCartService implements CartService{
     @Override
     public Cart addProduct(CartUpdateRequest req) {
         Product product = productService.findById(req.getProductId());
-        Cart cart = findById(req.getCartId());
+        Customer customer = customerService.findById(req.getCustomerId());
+        Cart cart = customer.getCart();
 
         cart.addProduct(req.getAmount(), product);
 
@@ -44,9 +43,11 @@ public class DomainCartService implements CartService{
 
     @Override
     public Cart deleteProduct(CartDeleteRequest req) {
-        Cart cart = findById(req.getCartId());
-        cart.deleteProduct(req.getProductName());
+        Customer customer = customerService.findById(req.getCustomerId());
+        Cart cart = customer.getCart();
+        cart.deleteProduct(req.getProductId());
 
         return cart;
     }
+
 }

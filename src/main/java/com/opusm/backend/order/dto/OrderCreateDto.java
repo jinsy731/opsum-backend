@@ -11,8 +11,11 @@ import com.opusm.backend.order.vo.OrderProductVO;
 import com.opusm.backend.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.ui.ModelMap;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +27,7 @@ public class OrderCreateDto {
         Long customerId;
         Long productId;
         PayMethod paymentMethod;
-        int amount;
+        Integer amount;
 
         public Order toEntity(Customer customer, Product product, PayMethod paymentMethod) {
             return new Order(customer, new OrderProduct(amount, product), paymentMethod);
@@ -40,9 +43,14 @@ public class OrderCreateDto {
         }
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
     public static class OrderCreateResponse {
+        private Long id;
         private int totalPrice;
-        private List<OrderProductVO> orderProducts;
+        private PayMethod paymentMethod;
+        private List<OrderProductVO> orderProducts = new ArrayList<>();
 
         public OrderCreateResponse(Order order) {
             ModelMappers.modelMapper.map(order, this);

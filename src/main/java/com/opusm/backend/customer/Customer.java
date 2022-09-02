@@ -1,6 +1,7 @@
 package com.opusm.backend.customer;
 
 import com.opusm.backend.cart.Cart;
+import com.opusm.backend.common.exception.ErrorMessageConst;
 import com.opusm.backend.common.support.BaseTimeEntity;
 import com.opusm.backend.common.support.convert.ConversionUtils;
 import com.opusm.backend.customer.dto.CustomerUpdateDto;
@@ -18,6 +19,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.opusm.backend.common.exception.ErrorMessageConst.*;
 import static com.opusm.backend.common.exception.Preconditions.*;
 import static com.opusm.backend.customer.dto.CustomerUpdateDto.*;
 
@@ -47,32 +49,23 @@ public class Customer extends BaseTimeEntity {
         require(Strings.isNotBlank(name));
 
         this.name = name;
+        this.cart = new Cart(0, new ArrayList<>());
     }
 
     public Customer(String name, int points, int assets) {
-        require(Strings.isNotBlank(name));
-        require(points >= 0);
-        require(assets >= 0);
+        require(Strings.isNotBlank(name), CUSTOMER_NAME_BLANK);
+        require(points >= 0, CUSTOMER_POINTS_NEGATIVE);
+        require(assets >= 0, CUSTOMER_ASSETS_NEGATIVE);
 
         this.name = name;
         this.points = points;
         this.assets = assets;
-    }
-
-    public Customer(String name, int points, int assets, Cart cart) {
-        require(Strings.isNotBlank(name));
-        require(points >= 0);
-        require(assets >= 0);
-
-        this.name = name;
-        this.points = points;
-        this.assets = assets;
-        this.cart = cart;
+        this.cart = new Cart(0, new ArrayList<>());
     }
 
     public void update(CustomerUpdateRequest request) {
-        require(request.getAssets() >= 0);
-        require(request.getPoints() >= 0);
+        require(request.getAssets() >= 0, CUSTOMER_ASSETS_NEGATIVE);
+        require(request.getPoints() >= 0, CUSTOMER_POINTS_NEGATIVE);
 
         ConversionUtils.entityUpdate(request, this);
     }

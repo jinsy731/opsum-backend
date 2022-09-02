@@ -1,5 +1,7 @@
 package com.opusm.backend.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opusm.backend.cart.Cart;
 import com.opusm.backend.cart.CartService;
 import com.opusm.backend.product.Product;
@@ -18,13 +20,6 @@ public class CartApiController {
 
     private final CartService cartService;
 
-    @PostMapping
-    public CartCreateResponse create(@RequestBody CartCreateRequest req) {
-        Cart cart = cartService.create(req);
-
-        return new CartCreateResponse(cart);
-    }
-
     @PutMapping
     public CartUpdateResponse addProduct(@RequestBody CartUpdateRequest req) {
         Cart cart = cartService.addProduct(req);
@@ -33,7 +28,7 @@ public class CartApiController {
     }
 
     @DeleteMapping
-    public CartDeleteResponse deleteProduct(@RequestBody CartDeleteRequest req) {
+    public CartDeleteResponse deleteProduct(@RequestBody CartDeleteRequest req){
         Cart cart = cartService.deleteProduct(req);
 
         return new CartDeleteResponse(cart);
