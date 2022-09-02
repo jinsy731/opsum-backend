@@ -1,16 +1,16 @@
-package com.opusm.backend.api.advice;
+package com.opusm.backend.api.controller;
 
-import com.opusm.backend.common.exception.OpusmException;
+import com.opusm.backend.common.exception.CustomException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.MethodNotAllowedException;
 
 import java.util.NoSuchElementException;
 
@@ -20,31 +20,19 @@ import java.util.NoSuchElementException;
 public class ApiAdvice {
     private final MessageSource messageSource;
 
-    @ExceptionHandler(Exception.class)
-    public ErrorResponse exception(Exception ex) {
+    @ExceptionHandler(CustomException.class)
+    public ErrorResponse customException(CustomException ex) {
         log.info(ex.getMessage(), ex);
 
-        return new ErrorResponse(new ErrorData("예상치 못한 에러가 발생하였습니다."));
-    }
-
-    @ExceptionHandler(OpusmException.class)
-    public ErrorResponse OpusmException(Exception ex) {
-        log.info(ex.getMessage(), ex);
-
-        String message = messageSource.getMessage(ex.getMessage(), null, LocaleContextHolder.getLocale());
+        val message = messageSource.getMessage(ex.getMessage(), null, LocaleContextHolder.getLocale());
 
         return new ErrorResponse(new ErrorData(message));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ErrorResponse argumentException(Exception ex) {
+    @ExceptionHandler(Exception.class)
+    public ErrorResponse exception(Exception ex) {
         log.info(ex.getMessage(), ex);
-        return new ErrorResponse(new ErrorData(ex.getMessage()));
-    }
 
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ErrorResponse methodException(Exception ex) {
-        log.info(ex.getMessage(), ex);
         return new ErrorResponse(new ErrorData(ex.getMessage()));
     }
 

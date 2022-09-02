@@ -9,11 +9,8 @@ import com.opusm.backend.product.Product;
 import com.opusm.backend.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static com.opusm.backend.common.exception.Preconditions.*;
 
@@ -32,6 +29,7 @@ public class DomainOrderService implements OrderService {
         Customer customer = customerService.findById(req.getCustomerId());
         Product product = productService.findById(req.getProductId());
         Order order = req.toEntity(customer, product, req.getPaymentMethod());
+        orderRepository.save(order);
 
         // 재고, 자산, 포인트 validation
         validate(product.getStock() >= req.getAmount(), ErrorCode.PRODUCT_NOT_ENOUGH_STOCK);
@@ -42,7 +40,6 @@ public class DomainOrderService implements OrderService {
         customer.updateAssetsAndPointByOrder(order);
         product.deductStock(req.getAmount());
 
-        orderRepository.save(order);
         return order;
     }
 
@@ -51,6 +48,9 @@ public class DomainOrderService implements OrderService {
         Customer customer = customerService.findById(req.getCustomerId());
         Cart cart = customer.getCart();
         Order order = req.toEntity(customer, cart.getCartProducts(), req.getPaymentMethod());
+        System.out.println("order.getOrderProducts().size() = " + order.getOrderProducts().size());
+        System.out.println("order.getOrderProducts().get(0) = " + order.getOrderProducts().get(0).getProduct().getName());
+        orderRepository.save(order);
 
         // 재고, 자산, 포인트 validation
         order.getOrderProducts().stream().forEach(it -> validate(it.getProduct().getStock() >= it.getAmount(), ErrorCode.PRODUCT_NOT_ENOUGH_STOCK));
@@ -62,7 +62,6 @@ public class DomainOrderService implements OrderService {
         order.getOrderProducts().stream().forEach(it -> it.getProduct().deductStock(it.getAmount()));
         cart.clearCart();
 
-        orderRepository.save(order);
         return order;
     }
 }

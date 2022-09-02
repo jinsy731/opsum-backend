@@ -1,12 +1,15 @@
 package com.opusm.backend.cart;
 
+import com.opusm.backend.common.exception.ErrorMessageConst;
 import com.opusm.backend.product.Product;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.modelmapper.spi.ErrorMessage;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.opusm.backend.common.exception.Preconditions.*;
 
@@ -43,29 +46,38 @@ public class Cart {
     }
     
     public void addProduct(int amount, Product product) {
-        require(amount >= 1);
+        require(amount >= 1, ErrorMessageConst.CART_AMOUNT_INVALID);
         notNull(product);
 
-        this.cartProducts.add(new CartProduct(amount, product, this));
+        CartProduct duplicatedCartProduct = findDuplicatedCartProduct(product.getId());
+        if (duplicatedCartProduct != null) {
+            duplicatedCartProduct.merge(amount);
+        } else {
+            this.cartProducts.add(new CartProduct(amount, product, this));
+        }
+
         this.totalPrice += (amount * product.getPrice());
     }
 
     public void deleteProduct(Long productId) {
         CartProduct findCartProduct = findCartProduct(productId);
 
-        this.totalPrice -= findCartProduct.getAmount() * findCartProduct.getProduct().getPrice();
+        this.totalPrice -= (findCartProduct.getAmount() * findCartProduct.getProduct().getPrice());
         this.cartProducts.remove(findCartProduct);
     }
 
     private CartProduct findCartProduct(Long productId) {
-        return this.cartProducts.stream().filter(cartProduct -> cartProduct.getProduct().getId()
-                        .equals(productId))
+        return this.cartProducts.stream().filter(cartProduct -> cartProduct.getProduct().getId().equals(productId))
                 .findAny()
                 .orElseThrow();
     }
 
+    private CartProduct findDuplicatedCartProduct(Long productId) {
+        return this.getCartProducts().stream().filter(cartProduct -> cartProduct.getProduct().getId() == productId).findFirst().orElse(null);
+    }
+
     public void clearCart() {
-        this.cartProducts = new ArrayList<>();
+        this.cartProducts.clear();
         this.totalPrice = 0;
     }
 }

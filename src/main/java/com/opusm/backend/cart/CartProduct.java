@@ -32,4 +32,8 @@ public class CartProduct {
         this.product = product;
         this.cart = cart;
     }
+
+    public void merge(int amount) {
+        this.amount += amount;
+    }
 }

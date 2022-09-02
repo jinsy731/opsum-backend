@@ -47,7 +47,7 @@ public class Preconditions {
 
     public static void validate(boolean expression, ErrorCode errorCode) {
         if (!expression) {
-            throw new OpusmException(errorCode);
+            throw new CustomException(errorCode);
         }
     }
 }

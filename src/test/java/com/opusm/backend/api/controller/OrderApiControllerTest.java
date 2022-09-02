@@ -87,13 +87,15 @@ class OrderApiControllerTest extends BaseApiTest {
         Product product2 = new Product("product2", 2000, 0.1f, 10, "owner");
         Product product3 = new Product("product3", 3000, 0.1f, 10, "owner");
         Cart cart = customer.getCart();
-        cart.addProduct(10, product1);
-        cart.addProduct(10, product2);
-        cart.addProduct(10, product3);
 
         productRepository.save(product1);
         productRepository.save(product2);
         productRepository.save(product3);
+
+        cart.addProduct(10, product1);
+        cart.addProduct(10, product2);
+        cart.addProduct(10, product3);
+
         customerRepository.save(customer);
 
         OrderCreateRequest req = new OrderCreateRequest(customer.getId(), null, PayMethod.ASSET, null);
@@ -104,8 +106,7 @@ class OrderApiControllerTest extends BaseApiTest {
                 .andExpect(status().isOk())
                 .andExpectAll(
                         jsonPath("$.id").isNotEmpty(),
-                        jsonPath("$.totalPrice").value(60000),
-                        jsonPath("$.orderProducts.size()").value(3)
+                        jsonPath("$.totalPrice").value(60000)
                 )
                 .andDo(document("order/cartOrder"
                         , preprocessRequest(prettyPrint())

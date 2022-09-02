@@ -1,9 +1,12 @@
 package com.opusm.backend.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.opusm.backend.base.BaseApiTest;
 import com.opusm.backend.cart.Cart;
 import com.opusm.backend.customer.Customer;
 import com.opusm.backend.customer.CustomerService;
+import com.opusm.backend.customer.dto.CustomerUpdateDto;
+import com.opusm.backend.customer.dto.CustomerUpdateDto.CustomerUpdateRequest;
 import com.opusm.backend.order.Order;
 import com.opusm.backend.order.OrderProduct;
 import com.opusm.backend.order.OrderService;
@@ -198,6 +201,7 @@ class CustomerApiControllerTest extends BaseApiTest {
                                         fieldWithPath("id").description("장바구니 ID"),
                                         fieldWithPath("totalPrice").description("담은 상품 총 가격"),
                                         subsectionWithPath("cartProducts").description("담은 상품 목록"),
+                                        fieldWithPath("cartProducts.[].id").description("장바구니 상품별 ID"),
                                         fieldWithPath("cartProducts.[].amount").description("상품 수량"),
                                         fieldWithPath("cartProducts.[].product.id").description("상품 ID"),
                                         fieldWithPath("cartProducts.[].product.name").description("상품명"),
@@ -258,6 +262,43 @@ class CustomerApiControllerTest extends BaseApiTest {
                                 fieldWithPath("[].orderProducts.[].product.stock").description("상품 재고"),
                                 fieldWithPath("[].orderProducts.[].product.owner").description("소유자")
                         )));
+    }
+
+    @Test
+    void 고객_정보_업데이트() throws Exception {
+        Customer customer = new Customer("customer", 1000, 1000);
+        customerService.create(customer);
+        CustomerUpdateRequest req = new CustomerUpdateRequest("new name", 100000, 100000);
+
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/customer/{customerId}", customer.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        jsonPath("$.id").value(customer.getId()),
+                        jsonPath("$.name").value(customer.getName()),
+                        jsonPath("$.assets").value(customer.getAssets()),
+                        jsonPath("$.points").value(customer.getPoints()),
+                        jsonPath("$.createdDate").isNotEmpty(),
+                        jsonPath("$.lastModifiedDate").isNotEmpty()
+                )
+                .andDo(document("customer/update"
+                        , preprocessRequest(prettyPrint())
+                        , preprocessResponse(prettyPrint())
+                        , pathParameters(parameterWithName("customerId").description("고객 ID"))
+                        , requestFields(
+                                fieldWithPath("name").description("고객 이름"),
+                                fieldWithPath("assets").description("자산"),
+                                fieldWithPath("points").description("포인트"))
+                        , responseFields(
+                                fieldWithPath("id").description("고객 ID"),
+                                fieldWithPath("name").description("고객 이름"),
+                                fieldWithPath("assets").description("고객 자산"),
+                                fieldWithPath("points").description("고객 포인트"),
+                                fieldWithPath("createdDate").description("생성 시각"),
+                                fieldWithPath("lastModifiedDate").description("마지막 수정 시각")
+                        )
+                ));
     }
 
 }

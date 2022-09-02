@@ -1,6 +1,8 @@
 package com.opusm.backend.cart;
 
 import com.opusm.backend.cart.dto.CartDeleteDto;
+import com.opusm.backend.common.exception.ErrorCode;
+import com.opusm.backend.common.exception.Preconditions;
 import com.opusm.backend.customer.Customer;
 import com.opusm.backend.customer.CustomerRepository;
 import com.opusm.backend.customer.CustomerService;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.opusm.backend.cart.dto.CartCreateDto.*;
 import static com.opusm.backend.cart.dto.CartDeleteDto.*;
 import static com.opusm.backend.cart.dto.CartUpdateDto.*;
+import static com.opusm.backend.common.exception.Preconditions.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +39,9 @@ public class DomainCartService implements CartService{
         Customer customer = customerService.findById(req.getCustomerId());
         Cart cart = customer.getCart();
 
-        cart.addProduct(req.getAmount(), product);
+        validate(req.getAmount() <= product.getStock(), ErrorCode.PRODUCT_NOT_ENOUGH_STOCK);
 
+        cart.addProduct(req.getAmount(), product);
         return cart;
     }
 

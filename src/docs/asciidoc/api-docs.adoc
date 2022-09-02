@@ -73,6 +73,21 @@ include::{snippets}/customer/getOrderList/request-parameters.adoc[]
 include::{snippets}/customer/getOrderList/http-response.adoc[]
 include::{snippets}/customer/getOrderList/response-fields.adoc[]
 
+[[customer-post-update]]
+=== Customer 업데이트
+
+==== HTTP request
+
+include::{snippets}/customer/update/http-request.adoc[]
+include::{snippets}/customer/update/path-parameters.adoc[]
+include::{snippets}/customer/update/request-fields.adoc[]
+
+
+==== HTTP response
+
+include::{snippets}/customer/update/http-response.adoc[]
+include::{snippets}/customer/update/response-fields.adoc[]
+
 [[product]]
 == Product
 

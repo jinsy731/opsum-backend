@@ -2,11 +2,14 @@ package com.opusm.backend.customer;
 
 import com.opusm.backend.base.BaseServiceTest;
 import com.opusm.backend.cart.Cart;
+import com.opusm.backend.customer.dto.CustomerUpdateDto;
+import com.opusm.backend.customer.dto.CustomerUpdateDto.CustomerUpdateRequest;
 import com.opusm.backend.product.Product;
 import com.opusm.backend.product.ProductRepository;
 import com.opusm.backend.product.ProductService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -80,7 +83,19 @@ class DomainCustomerServiceTest extends BaseServiceTest {
 
         assertThat(cart).isEqualTo(findCart);
         assertThat(findCart.getTotalPrice()).isEqualTo(3000);
-        assertThat(findCart.getCartProducts().size()).isEqualTo(3);
+    }
+
+    @Test
+    void 고객_정보_업데이트() {
+        Customer customer = new Customer("customer", 1000, 1000);
+        customerService.create(customer);
+        CustomerUpdateRequest req = new CustomerUpdateRequest("new name", 100000, 100000);
+
+        customerService.update(customer.getId(), req);
+
+        assertThat(customer.getName()).isEqualTo(req.getName());
+        assertThat(customer.getAssets()).isEqualTo(req.getAssets());
+        assertThat(customer.getPoints()).isEqualTo(req.getPoints());
     }
 
 }

@@ -25,6 +25,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.request.RequestParametersSnippet;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.opusm.backend.cart.dto.CartCreateDto.*;
@@ -68,8 +69,7 @@ class CartApiControllerTest extends BaseApiTest {
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk())
                 .andExpectAll(
-                        jsonPath("$.totalPrice").value(100000),
-                        jsonPath("$.cartProducts.size()").value(2)
+                        jsonPath("$.totalPrice").value(100000)
                 )
                 .andDo(document("cart/addProduct"
                         , preprocessRequest(prettyPrint())
@@ -131,6 +131,7 @@ class CartApiControllerTest extends BaseApiTest {
                                 fieldWithPath("id").description("장바구니 ID"),
                                 fieldWithPath("totalPrice").description("담은 상품 총 가격"),
                                 subsectionWithPath("cartProducts").description("담은 상품 목록"),
+                                fieldWithPath("cartProducts.[].id").description("장바구니 상품별 ID"),
                                 fieldWithPath("cartProducts.[].amount").description("상품 수량"),
                                 fieldWithPath("cartProducts.[].product.id").description("상품 ID"),
                                 fieldWithPath("cartProducts.[].product.name").description("상품명"),

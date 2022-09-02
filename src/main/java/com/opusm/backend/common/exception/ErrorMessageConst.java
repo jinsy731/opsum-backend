@@ -11,4 +11,6 @@ public interface ErrorMessageConst {
     String PRODUCT_OWNER_BLANK = "소유자 명은 빈 값일 수 없습니다.";
     String PRODUCT_STOCK_NEGATIVE = "재고 수량은 음수일 수 없습니다";
     String PRODUCT_POINT_RATE_LIMIT = "포인트 적립율은 100%를 넘을 수 없습니다.";
+    String CART_AMOUNT_INVALID = "상품 수량은 1개 이상이어야 합니다.";
+
 }

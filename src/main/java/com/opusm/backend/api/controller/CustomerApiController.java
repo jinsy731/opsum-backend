@@ -5,6 +5,7 @@ import com.opusm.backend.cart.vo.CartVO;
 import com.opusm.backend.common.support.convert.ConversionUtils;
 import com.opusm.backend.customer.Customer;
 import com.opusm.backend.customer.CustomerService;
+import com.opusm.backend.customer.dto.CustomerUpdateDto;
 import com.opusm.backend.customer.vo.CustomerVO;
 import com.opusm.backend.order.Order;
 import com.opusm.backend.order.OrderService;
@@ -12,12 +13,14 @@ import com.opusm.backend.order.vo.OrderVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.opusm.backend.customer.dto.CustomerCreateDto.*;
+import static com.opusm.backend.customer.dto.CustomerUpdateDto.*;
 
 
 @RestController
@@ -51,6 +54,13 @@ public class CustomerApiController {
         return ConversionUtils.entityToDto(CustomerCreateResponse.class, customer);
     }
 
+    @PatchMapping("/{customerId}")
+    public CustomerUpdateResponse update(@PathVariable Long customerId, @RequestBody CustomerUpdateRequest req) {
+        Customer customer = customerService.update(customerId, req);
+
+        return new CustomerUpdateResponse(customer);
+    }
+
     @GetMapping("/{customerId}/cart")
     public CartVO customersCart(@PathVariable Long customerId) {
         Cart cart = customerService.findCartByCustomerId(customerId);
@@ -59,7 +69,7 @@ public class CustomerApiController {
     }
 
     @GetMapping("/{customerId}/order")
-    public List<OrderVO> customerOrders(@PathVariable Long customerId, Pageable pageable) {
+    public List<OrderVO> customerOrders(@PathVariable Long customerId, @PageableDefault(page = 0, size = 10) Pageable pageable) {
         List<Order> orders = customerService.findCustomerOrders(customerId, pageable);
 
         return orders.stream().map(order -> new OrderVO(order)).collect(Collectors.toList());

@@ -1,9 +1,9 @@
 package com.opusm.backend.customer;
 
 import com.opusm.backend.cart.Cart;
-import com.opusm.backend.common.exception.ErrorMessageConst;
 import com.opusm.backend.common.support.BaseTimeEntity;
 import com.opusm.backend.common.support.convert.ConversionUtils;
+import com.opusm.backend.customer.dto.CustomerCreateDto;
 import com.opusm.backend.customer.dto.CustomerUpdateDto;
 import com.opusm.backend.order.Order;
 import com.opusm.backend.order.OrderProduct;
@@ -21,6 +21,7 @@ import java.util.List;
 
 import static com.opusm.backend.common.exception.ErrorMessageConst.*;
 import static com.opusm.backend.common.exception.Preconditions.*;
+import static com.opusm.backend.customer.dto.CustomerCreateDto.*;
 import static com.opusm.backend.customer.dto.CustomerUpdateDto.*;
 
 @Getter
@@ -63,11 +64,12 @@ public class Customer extends BaseTimeEntity {
         this.cart = new Cart(0, new ArrayList<>());
     }
 
-    public void update(CustomerUpdateRequest request) {
-        require(request.getAssets() >= 0, CUSTOMER_ASSETS_NEGATIVE);
-        require(request.getPoints() >= 0, CUSTOMER_POINTS_NEGATIVE);
+    public void update(CustomerUpdateRequest updateParam) {
+        require(updateParam.getName() == null || Strings.isNotEmpty(updateParam.getName()));
+        require(updateParam.getAssets() == null ||updateParam.getAssets() >= 0, CUSTOMER_ASSETS_NEGATIVE);
+        require(updateParam.getPoints() == null || updateParam.getPoints() >= 0, CUSTOMER_POINTS_NEGATIVE);
 
-        ConversionUtils.entityUpdate(request, this);
+        ConversionUtils.entityUpdate(updateParam, this);
     }
 
     public void updateAssetsAndPointByOrder(Order order) {

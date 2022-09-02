@@ -34,7 +34,7 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "order" ,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
     public Order(Customer customer, OrderProduct orderProduct, PayMethod paymentMethod) {
@@ -45,7 +45,7 @@ public class Order {
     }
     public Order(Customer customer, List<OrderProduct> orderProducts, PayMethod paymentMethod) {
         this.customer = customer;
-        this.orderProducts = orderProducts;
+        orderProducts.stream().forEach(orderProduct -> this.orderProducts.add(orderProduct));
         this.paymentMethod = paymentMethod;
         this.totalPrice = calculateTotalPrice(this.orderProducts);
     }

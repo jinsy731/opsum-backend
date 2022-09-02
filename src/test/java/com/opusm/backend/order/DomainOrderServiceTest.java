@@ -2,21 +2,20 @@ package com.opusm.backend.order;
 
 import com.opusm.backend.base.BaseServiceTest;
 import com.opusm.backend.cart.Cart;
-import com.opusm.backend.common.exception.OpusmException;
+import com.opusm.backend.common.exception.CustomException;
 import com.opusm.backend.customer.Customer;
 import com.opusm.backend.customer.CustomerService;
-import com.opusm.backend.order.dto.OrderCreateDto;
 import com.opusm.backend.product.Product;
+import com.opusm.backend.product.ProductRepository;
 import com.opusm.backend.product.ProductService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.opusm.backend.order.dto.OrderCreateDto.*;
@@ -31,6 +30,8 @@ class DomainOrderServiceTest extends BaseServiceTest {
     private CustomerService customerService;
     @MockBean
     private ProductService productService;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Test
     void 단일_주문_성공_자산_사용_및_포인트_적립() {
@@ -75,7 +76,7 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Mockito.when(customerService.findById(any())).thenReturn(customer);
         Mockito.when(productService.findById(any())).thenReturn(product);
 
-        assertThatExceptionOfType(OpusmException.class).isThrownBy(() -> orderService.singleOrder(orderCreateRequest))
+        assertThatExceptionOfType(CustomException.class).isThrownBy(() -> orderService.singleOrder(orderCreateRequest))
                 .withMessage("error.product.stock.short")
                 .withNoCause();
     }
@@ -89,7 +90,7 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Mockito.when(customerService.findById(any())).thenReturn(customer);
         Mockito.when(productService.findById(any())).thenReturn(product);
 
-        assertThatExceptionOfType(OpusmException.class).isThrownBy(() -> orderService.singleOrder(orderCreateRequest))
+        assertThatExceptionOfType(CustomException.class).isThrownBy(() -> orderService.singleOrder(orderCreateRequest))
                 .withMessage("error.customer.assets.short")
                 .withNoCause();
     }
@@ -103,7 +104,7 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Mockito.when(customerService.findById(any())).thenReturn(customer);
         Mockito.when(productService.findById(any())).thenReturn(product);
 
-        assertThatExceptionOfType(OpusmException.class).isThrownBy(() -> orderService.singleOrder(orderCreateRequest))
+        assertThatExceptionOfType(CustomException.class).isThrownBy(() -> orderService.singleOrder(orderCreateRequest))
                 .withMessage("error.customer.points.short")
                 .withNoCause();
     }
@@ -113,6 +114,9 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product1 = new Product("product1", 1000, 0.5f, 10, "owner1");
         Product product2 = new Product("product2", 500, 0.5f, 10, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 10, "owner1");
+
+        productRepository.saveAll(Arrays.asList(product1, product2, product3));
+
 
         Customer customer = new Customer("name1", 0, 100000);
         Cart cart = customer.getCart();
@@ -142,6 +146,8 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product2 = new Product("product2", 500, 0.5f, 10, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 10, "owner1");
 
+        productRepository.saveAll(Arrays.asList(product1, product2, product3));
+
         Customer customer = new Customer("name1", 100000, 0);
         Cart cart = customer.getCart();
         cart.addProduct(5, product1);
@@ -169,6 +175,7 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product1 = new Product("product1", 1000, 0.5f, 4, "owner1");
         Product product2 = new Product("product2", 500, 0.5f, 4, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 4, "owner1");
+        productRepository.saveAll(Arrays.asList(product1, product2, product3));
 
         Customer customer = new Customer("name1", 100000, 0);
         Cart cart = customer.getCart();
@@ -180,7 +187,7 @@ class DomainOrderServiceTest extends BaseServiceTest {
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);
 
-        assertThatExceptionOfType(OpusmException.class).isThrownBy(() -> orderService.cartOrder(orderCreateRequest))
+        assertThatExceptionOfType(CustomException.class).isThrownBy(() -> orderService.cartOrder(orderCreateRequest))
                 .withMessage("error.product.stock.short")
                 .withNoCause();
     }
@@ -191,6 +198,7 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product1 = new Product("product1", 1000, 0.5f, 10, "owner1");
         Product product2 = new Product("product2", 500, 0.5f, 10, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 10, "owner1");
+        productRepository.saveAll(Arrays.asList(product1, product2, product3));
 
         Customer customer = new Customer("name1", points, 0);
         Cart cart = customer.getCart();
@@ -202,7 +210,7 @@ class DomainOrderServiceTest extends BaseServiceTest {
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);
 
-        assertThatExceptionOfType(OpusmException.class).isThrownBy(() -> orderService.cartOrder(orderCreateRequest))
+        assertThatExceptionOfType(CustomException.class).isThrownBy(() -> orderService.cartOrder(orderCreateRequest))
                 .withMessage("error.customer.points.short")
                 .withNoCause();
     }
@@ -213,6 +221,7 @@ class DomainOrderServiceTest extends BaseServiceTest {
         Product product1 = new Product("product1", 1000, 0.5f, 10, "owner1");
         Product product2 = new Product("product2", 500, 0.5f, 10, "owner1");
         Product product3 = new Product("product3", 2000, 0.5f, 10, "owner1");
+        productRepository.saveAll(Arrays.asList(product1, product2, product3));
 
         Customer customer = new Customer("name1", 100000, assets);
         Cart cart = customer.getCart();
@@ -224,7 +233,7 @@ class DomainOrderServiceTest extends BaseServiceTest {
 
         Mockito.when(customerService.findById(any())).thenReturn(customer);
 
-        assertThatExceptionOfType(OpusmException.class).isThrownBy(() -> orderService.cartOrder(orderCreateRequest))
+        assertThatExceptionOfType(CustomException.class).isThrownBy(() -> orderService.cartOrder(orderCreateRequest))
                 .withMessage("error.customer.assets.short")
                 .withNoCause();
     }

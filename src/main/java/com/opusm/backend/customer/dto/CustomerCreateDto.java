@@ -14,8 +14,8 @@ public class CustomerCreateDto {
     @AllArgsConstructor
     public static class CustomerCreateRequest {
         private String name;
-        private int assets;
-        private int points;
+        private Integer assets;
+        private Integer points;
 
         public Customer toEntity(){
             return new Customer(name, points, assets);

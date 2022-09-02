@@ -1,15 +1,19 @@
 package com.opusm.backend.customer;
 
 import com.opusm.backend.cart.Cart;
+import com.opusm.backend.customer.dto.CustomerCreateDto;
+import com.opusm.backend.customer.dto.CustomerCreateDto.CustomerCreateRequest;
+import com.opusm.backend.customer.dto.CustomerUpdateDto;
 import com.opusm.backend.order.Order;
 import com.opusm.backend.order.OrderRepository;
-import com.opusm.backend.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.opusm.backend.customer.dto.CustomerUpdateDto.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -42,6 +46,16 @@ public class DomainCustomerService implements CustomerService{
 
     @Override
     public List<Order> findCustomerOrders(Long customerId, Pageable pageable) {
-        return orderRepository.findAllByCustomerId(customerId, pageable).getContent();
+        List<Order> orders = orderRepository.findAllByCustomerId(customerId, pageable).getContent();
+        orders.stream().forEach(order -> System.out.println("order.getOrderProducts().size() = " + order.getOrderProducts().size()));
+        return orders;
+    }
+
+    @Override
+    public Customer update(Long customerId, CustomerUpdateRequest req) {
+        Customer customer = findById(customerId);
+        customer.update(req);
+
+        return customer;
     }
 }
